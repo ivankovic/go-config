@@ -57,3 +57,30 @@ func TestSectionFromRealFile(t *testing.T) {
 		t.FailNow()
 	}
 }
+
+func TestMockedSection(t *testing.T) {
+	c := Config{
+		sections: map[string]Section{
+			"s1": Section{
+				values: map[string]string{
+					"k": "v",
+				},
+			},
+		},
+	}
+
+	for ti, tt := range []struct {
+		section       string
+		name          string
+		default_value string
+		expected      string
+	}{
+		{"global", "a", "OK", "OK"},
+		{"s1", "k", "FAIL", "v"},
+	} {
+		result := c.Get(tt.section, tt.name, tt.default_value)
+		if result != tt.expected {
+			t.Errorf("(%d) Get(%s, %s, %s) = %s expected %s", ti, tt.section, tt.name, tt.default_value, result, tt.expected)
+		}
+	}
+}
