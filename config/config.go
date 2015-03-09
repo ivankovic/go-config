@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -79,6 +80,14 @@ func (c Config) Get(section, name, default_value string) string {
 	return default_value
 }
 
+func (c Config) GetInt(section, name string, default_value int) int {
+	s, ok := c.sections[section]
+	if ok {
+		return s.GetInt(name, default_value)
+	}
+	return default_value
+}
+
 func (c Config) GetSection(section string) (Section, error) {
 	s, ok := c.sections[section]
 	if !ok {
@@ -92,6 +101,17 @@ func (s Section) Get(name, default_value string) string {
 	if ok {
 		if v != "" {
 			return v
+		}
+	}
+	return default_value
+}
+
+func (s Section) GetInt(name string, default_value int) int {
+	v, ok := s.values[name]
+	if ok {
+		i, oki := strconv.Atoi(v)
+		if oki == nil {
+			return i
 		}
 	}
 	return default_value
