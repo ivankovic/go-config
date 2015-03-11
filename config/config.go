@@ -10,11 +10,11 @@ import (
 )
 
 type Section struct {
-	values map[string]string
+	Values map[string]string
 }
 
 type Config struct {
-	sections map[string]Section
+	Sections map[string]Section
 }
 
 func addEntry(x string, section string, c *Config) string {
@@ -36,19 +36,19 @@ func addEntry(x string, section string, c *Config) string {
 			value = strings.TrimSpace(split[1])
 		}
 
-		s, ok := (*c).sections[section]
+		s, ok := (*c).Sections[section]
 		if !ok {
-			s = Section{values: make(map[string]string)}
-			(*c).sections[section] = s
+			s = Section{Values: make(map[string]string)}
+			(*c).Sections[section] = s
 		}
-		s.values[name] = value
+		s.Values[name] = value
 	}
 
 	return section
 }
 
 func Load(path string) Config {
-	c := Config{sections: make(map[string]Section)}
+	c := Config{Sections: make(map[string]Section)}
 	log.Printf("Trying to read config from %s", path)
 
 	f, err := os.Open(path)
@@ -73,7 +73,7 @@ func Load(path string) Config {
 }
 
 func (c Config) Get(section, name, default_value string) string {
-	s, ok := c.sections[section]
+	s, ok := c.Sections[section]
 	if ok {
 		return s.Get(name, default_value)
 	}
@@ -81,7 +81,7 @@ func (c Config) Get(section, name, default_value string) string {
 }
 
 func (c Config) GetInt(section, name string, default_value int) int {
-	s, ok := c.sections[section]
+	s, ok := c.Sections[section]
 	if ok {
 		return s.GetInt(name, default_value)
 	}
@@ -89,7 +89,7 @@ func (c Config) GetInt(section, name string, default_value int) int {
 }
 
 func (c Config) GetSection(section string) (Section, error) {
-	s, ok := c.sections[section]
+	s, ok := c.Sections[section]
 	if !ok {
 		return Section{}, errors.New("No such section!")
 	}
@@ -97,7 +97,7 @@ func (c Config) GetSection(section string) (Section, error) {
 }
 
 func (s Section) Get(name, default_value string) string {
-	v, ok := s.values[name]
+	v, ok := s.Values[name]
 	if ok {
 		if v != "" {
 			return v
@@ -107,7 +107,7 @@ func (s Section) Get(name, default_value string) string {
 }
 
 func (s Section) GetInt(name string, default_value int) int {
-	v, ok := s.values[name]
+	v, ok := s.Values[name]
 	if ok {
 		i, oki := strconv.Atoi(v)
 		if oki == nil {

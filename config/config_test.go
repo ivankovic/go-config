@@ -60,9 +60,9 @@ func TestSectionFromRealFile(t *testing.T) {
 
 func MockedConfig() Config {
 	return Config{
-		sections: map[string]Section{
+		Sections: map[string]Section{
 			"s1": Section{
-				values: map[string]string{
+				Values: map[string]string{
 					"k": "v",
 					"i": "14",
 				},
